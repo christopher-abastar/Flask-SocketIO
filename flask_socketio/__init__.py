@@ -22,7 +22,7 @@ from werkzeug.serving import run_with_reloader
 from .namespace import Namespace
 from .test_client import SocketIOTestClient
 
-__version__ = '2.7.1'
+__version__ = '2.7.1.1'
 
 
 class _SocketIOMiddleware(socketio.Middleware):
@@ -469,9 +469,9 @@ class SocketIO(object):
                     eventlet_socket = eventlet.wrap_ssl(eventlet_socket,
                                                         **ssl_params)
 
-                eventlet.wsgi.server(eventlet_socket, app,
-                                     log_output=log_output, **kwargs)
-
+                pool = eventlet.GreenPool(10000)
+                eventlet.wsgi.server(eventlet_socket, app, custom_pool=pool,
+                                              log_output=log_output, **kwargs)
             if use_reloader:
                 run_with_reloader(run_server, extra_files=extra_files)
             else:
