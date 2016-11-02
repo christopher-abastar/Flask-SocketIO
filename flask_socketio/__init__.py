@@ -325,9 +325,10 @@ class SocketIO(object):
         """
         skip_sid = flask.request.sid \
             if not kwargs.get('include_self', True) else None
+        base_manager = kwargs.get('base_manager', False)
         self.server.emit(event, *args, namespace=kwargs.get('namespace', '/'),
                          room=kwargs.get('room'), skip_sid=skip_sid,
-                         callback=kwargs.get('callback'))
+                         callback=kwargs.get('callback'), base_manager=base_manager)
 
     def send(self, data, json=False, namespace=None, room=None,
              callback=None, include_self=True):
